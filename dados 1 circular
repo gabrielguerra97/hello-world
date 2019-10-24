@@ -1,0 +1,397 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+int cont=0,i=0;
+struct Agenda{
+	int idade;
+	char nome[40],email[40],tel[20],posicao;
+	Agenda *prox;
+	Agenda *ant;
+};
+typedef struct Agenda contato;
+
+contato *criar_ponteiro(void){
+	contato *p=(contato*)malloc(sizeof(contato));
+	if(!p){
+		printf("error");
+	}else{
+		p->ant= NULL;
+		p->email[0]= NULL;
+		p->idade= NULL;
+		p->nome[0]= NULL;
+		p->prox= NULL;
+		p->tel[0]= NULL;
+	}
+};
+void inserir_f(contato *inicio){
+	contato *novo= criar_ponteiro();
+	system("cls");
+	
+		printf("Inserir no final:\n\n");
+		printf("Qual o nome: \n");
+		fflush(stdin);
+		gets(novo->nome);
+		printf("Qual email:\n");
+		fflush(stdin);
+		gets(novo->email);
+		printf("Qual idade:\n");
+		scanf("%i",&novo->idade);
+		printf("Qual telefone:\n");
+		fflush(stdin);
+		gets(novo->tel);
+		novo->posicao= 'N';
+		
+		if(inicio->prox == NULL){
+			inicio->prox=novo;
+			inicio->ant=novo;
+			novo->prox=inicio;
+			novo->ant=inicio;
+		}else{
+			contato *temp=inicio;
+			while(temp->prox != inicio){
+				temp=temp->prox;
+			}
+			temp->prox=novo;
+			novo->prox=inicio;
+			novo->ant=temp;
+			inicio->ant=novo;
+		}
+}
+void inserir_prio(contato *inicio){
+	contato *novo= criar_ponteiro();
+	system("cls");
+	
+	printf("Qual o nome do prioritario: \n");
+	fflush(stdin);
+	gets(novo->nome);
+	printf("Qual email do prioritario:\n");
+	fflush(stdin);
+	gets(novo->email);
+	printf("Qual idade do prioritario:\n");
+	scanf("%i",&novo->idade);
+	printf("Qual telefone do prioritario:\n");
+	fflush(stdin);
+	gets(novo->tel);
+	
+	novo->posicao= 'P';
+	novo->prox= inicio->prox;
+	inicio->prox->ant= novo;
+	novo->ant=inicio;
+	inicio->prox=novo;
+}
+void inserir_meio(contato *inicio){
+	system("cls");
+	contato *novo= criar_ponteiro();
+	contato *temp;
+	printf("Qual o nome (inserir no meio): \n");
+	fflush(stdin);
+	gets(novo->nome);
+	printf("Qual email do prioritario (inserir no meio):\n");
+	fflush(stdin);
+	gets(novo->email);
+	printf("Qual idade do prioritario (inserir no meio):\n");
+	scanf("%i",&novo->idade);
+	printf("Qual telefone do prioritario (inserir no meio):\n");
+	fflush(stdin);
+	gets(novo->tel);
+	
+	novo->posicao= 'P';
+	temp=inicio->prox;
+	while(temp->posicao == 'P'){
+		temp=temp->prox;
+	}
+	novo->prox= temp->prox;
+	temp->prox->ant= novo;
+	novo->ant= temp;
+	temp->prox= novo;
+}
+void visualizar(contato *inicio){
+	system("cls");
+	contato *temp;
+	temp= inicio->prox;
+				
+	if(temp == NULL){
+		printf("Nao ha registro!\n\n");
+	} else {
+		printf("\nCadastrados:\n");
+					
+	while(temp != inicio){
+					
+		printf("\nNome: %s\n",temp->nome);	
+		printf("Email: %s\n",temp->email);
+		printf("Idade: %i\n",temp->idade);
+		printf("Telefone: %s\n\n",temp->tel);
+		temp= temp->prox;					
+	}	
+		}
+	system("pause");
+}
+void consulta(contato *inicio){
+	system("cls");
+					
+	contato *temp;
+	char nome_p[40];
+	temp= inicio->prox;
+					
+	if(temp == NULL){
+		printf("Nome nao cadastrado\n");
+	} else {
+		printf("Informe o nome a ser consultado:\n");
+		fflush(stdin);
+		gets(nome_p);
+					
+	while(temp != NULL){
+		if(strcmp(nome_p,temp->nome) == 0){
+			printf("\nNome: %s\n",temp->nome);	
+			printf("Email: %s\n",temp->email);
+			printf("Idade: %i\n",temp->idade);
+			printf("Telefone: %s\n\n",temp->tel);	
+		}
+		temp= temp->prox;
+	}
+		}
+	system("pause");
+}
+void editar(contato *inicio){
+	contato *temp;
+	temp= inicio->prox;
+	char n_e[40],nome_e[40],email_e[40],tel_e[20];
+	int e,idade_e;
+	system("cls");
+	
+	if(temp == NULL){
+		printf("Nenhum nome cadastrado\n");
+		system("pause");
+	} else {
+		printf("Informe o nome a ser editado:\n");
+		fflush(stdin);
+		gets(n_e);
+	
+			while(temp != NULL){
+				if(strcmp(n_e,temp->nome) == 0){
+					system("cls");
+					printf("Oque deseja alterar:\n1)Nome\n2)Email\n3)Idade\n4)Telefone\n");
+					scanf("%d",&e);
+			
+				switch(e){
+					case 1:
+						{
+							system("cls");
+							printf("Informe o nome a ser alterado:\n");
+							fflush(stdin);
+							gets(nome_e);
+							strcpy(temp->nome,nome_e);
+							break;
+						}
+					case 2:	
+						{
+							system("cls");
+							printf("Informe o email a ser alterado:\n");
+							fflush(stdin);
+							gets(email_e);
+							strcpy(temp->email,email_e);
+							break;
+						}
+					case 3:
+						{
+							system("cls");
+							printf("Informe a idade a ser alterado:\n");
+							scanf("%d",&idade_e);
+							temp->idade= idade_e;
+							break;	
+						}
+					case 4:
+						{
+							system("cls");
+							printf("Informe o telefone a ser alterado:\n");
+							fflush(stdin);
+							gets(tel_e);
+							strcpy(temp->tel,tel_e);
+							break;		
+						}
+					default:
+						{
+							printf("Nao existe");	
+						}			
+				}
+				}
+		temp=temp->prox;
+			}
+		}
+}
+void excluir(contato *inicio){
+system("cls");
+contato *temp;
+contato *aux;
+char nome_ex[40],email_ex[40];
+
+	if(temp == NULL){
+		printf("nao execute\n");
+	} else {
+		printf("Informe o contato da agenda que deseja excluir:");
+		fflush(stdin);
+		gets(nome_ex);
+
+	temp= inicio->prox;
+	while(temp != inicio){
+		if(strcmp(nome_ex,temp->nome) == 0){
+			cont++;
+		}
+	temp= temp->prox;
+	}
+
+	printf("Nomes Achados:\n");
+	temp= inicio->prox;
+	aux= inicio;
+	if(cont == 1){
+		while(temp != inicio){
+			if(strcmp(nome_ex,temp->nome) == 0){
+				if(aux->ant == NULL && temp->prox == NULL){
+					free(temp);
+					system("pause");
+				}
+			}
+		temp= temp->prox;
+		aux= aux->prox;
+		}
+	} else if(cont >= 2){
+		temp= inicio->prox;
+		aux= inicio;
+			while(aux->prox != inicio){
+				if(strcmp(nome_ex,temp->nome) == 0){
+					printf("\nNome: %s\n",temp->nome);
+					printf("Email: %s\n",temp->email);
+					printf("Idade: %i\n",temp->idade);
+					printf("Telefone: %s\n\n",temp->tel);
+				}
+			temp=temp->prox;
+			aux= aux->prox;
+			}
+		printf("Endereco de email:\n");
+		fflush(stdin);
+		gets(email_ex);
+
+		temp= inicio->prox;
+		aux= inicio;
+		while(temp != NULL){
+			if(strcmp(email_ex,temp->email) == 0){
+				if(temp->prox == NULL){
+					aux->prox= temp->prox;
+					free(temp);
+				}
+			}
+		if(strcmp(email_ex,temp->email) == 0){
+			if(temp->prox != NULL && temp->ant != NULL){
+				aux->prox= temp->prox;
+				temp->prox->ant= aux;
+				free(temp);
+			}
+		}
+		temp= temp->prox;
+		aux= aux->prox;
+		}
+	}
+	}
+}
+void inverso(contato *inicio){
+	system("cls");
+	contato *temp;
+	temp= inicio->ant;
+				
+	if(temp == NULL){
+		printf("Nao ha registro!\n\n");
+	} 
+	
+	else {
+
+		while(temp != inicio){
+			temp= temp->prox;
+		}
+		printf("Contatos Registrados:\n\n");
+
+		while(temp != inicio){
+			printf("\nNome: %s\n",temp->nome);	
+			printf("Email: %s\n",temp->email);
+			printf("Idade: %i\n",temp->idade);
+			printf("Telefone: %s\n\n",temp->tel);
+			temp= temp->ant;
+		}					
+		}
+	system("pause");	
+}
+void menu(){
+	contato *inicio= criar_ponteiro();
+	Agenda *a;
+	
+	if(inicio == NULL){
+		printf("Nao ha memoria suficiente!\n");
+		system("pause");
+		exit(0);
+		
+	} else {
+		inicio->prox = NULL;
+	}
+	
+	int escolha,t;
+	
+	while(true){
+	system("cls");
+	printf("Bem Vindo ao MENU!\n\nEscolha o que deseja fazer:\n\n1)Inserir no Final\n2)Inserir Prioritario\n3)Inseir meio\n4)Visualizar Inseridos\n5)Consultar\n6)Editar\n7)Excluir\n8)Imprimir Inverso\n9)Sair\n");
+	scanf("%d",&escolha);
+	
+	switch (escolha){
+		
+		case 1:
+			{
+				inserir_f(inicio);
+				break;
+			}
+		case 2:
+			{
+				inserir_prio(inicio);
+				break;
+			}
+		case 3:
+			{
+				inserir_meio(inicio);
+				break;
+			}	
+		case 4:
+			{
+				visualizar(inicio);
+				break;
+			}	
+		case 5:
+			{
+				consulta(inicio);
+				break;
+			}
+		case 6:
+			{
+				editar(inicio);
+				break;		
+			}
+		case 7:
+			{
+				excluir(inicio);
+				break;
+			}
+		case 8:
+			{
+				inverso(inicio);
+				break;
+			}				
+		case 9:
+			{
+				system("cls");
+				printf("\nAdeus meu Caro !\n\n");
+				exit(0);
+			}	
+		default:
+		{
+			printf("NAO EXISTE");
+			}	
+	}
+}
+}
